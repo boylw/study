@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>vue组件创建以及父to子通信</title>
+</head>
+<body>
+    <div id="app">
+        <my-footer></my-footer>
+        <my-footer2></my-footer2>
+        <my-footer3></my-footer3>
+    </div>
+
+    <template id="tmp1">
+        <div>
+            <h1>我是footer组件3</h1>
+        </div>
+    </template>
+
+    <template id="f1Child">
+        <div>
+            <h2>我是footer1的子组件</h2>
+            <button @click="changeParentNum">我想改变父亲的count</button>
+            <p>{{count}}</p>
+        </div>
+    </template>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script> 
+    <script>
+        window.onload = () => {
+            // 方式1
+            let footer = Vue.extend({
+                data() {
+                    return {
+                        count:0
+                    }
+                },
+                methods: {
+                    changeCount() {
+                        this.count++;
+                    }
+                },
+                watch: {
+                    count:(val) => {
+                        alert(val);
+                    }
+                },
+                template: 
+                '<div><h1>我是footer组件</h1> <button @click="changeCount">我是footer{{ count }}组件</button><ft-child1 v-bind:count="count"></ft-child1></div>'
+            })
+            Vue.component('myFooter', footer);
+
+            // 方式2
+            Vue.component('myFooter2',{
+                data() {
+                    return {
+                        count:2,
+                        clicked: 0
+                    }
+                },
+                template: '<div><h1>我是footer组件{{ count }}</h1> <p>我被1点击了{{clicked}}次</p></div>'
+            })
+
+            // 方式3
+            Vue.component('myFooter3', {
+                template: '#tmp1'
+            })
+
+            Vue.component('ftChild1', {
+                template: '#f1Child',
+                props: ['count'],
+                methods: {
+                    changeParentNum() {
+                        this.count--;
+                    }
+                }
+            })
+            let vm = new Vue({
+                el:'#app'
+            })
+            console.log(vm);
+        }
+    </script>
+</body>
+</html>

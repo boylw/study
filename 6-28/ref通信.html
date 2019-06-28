@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>ref</title>
+</head>
+
+<body>
+    <div id="app">
+        <button @click='get'>get</button>
+        <app-father ref='kid'></app-father>
+    </div>
+
+    <template id="app-father">
+        <div>
+                <input type="text" v-model="message">
+                <button @click="add">让子元素的数字加1</button>
+                <app-child ref="child"></app-child>
+        </div>
+        
+    </template>
+
+    <template id="app-child">
+        <div>
+            <input type="text" v-model="child">
+        </div>
+    </template>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script>
+        Vue.component('app-father', {
+            template: '#app-father',
+            data() {
+                return {
+                    message: 'hello vue.js'
+                }
+            },
+            methods: {
+                add() {
+                    this.$refs.child.init()
+                }
+            },
+        })
+
+        Vue.component('app-child', {
+            template: '#app-child',
+            data() {
+                return {
+                    child: 1
+                }
+            },
+            methods: {
+                init() {
+                    this.child++;
+                }
+            }
+        })
+        new Vue({
+            el: '#app',
+            methods: {
+                get() {
+                    console.log(this.$refs.kid.message);
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>子向父传参</title>
+</head>
+
+<body>
+
+    <div id="app">
+        <my-parent></my-parent>
+    </div>
+
+    <template id="p">
+        <div >
+            <h1>我是父组件 {{count}}</h1>
+            <my-child @send-mes="sendMessage" :msg="msg"></my-child>
+        </div>
+    </template>
+
+    <template id="c">
+        <div >
+            <h2>我是子组件</h2>
+            <p>{{msg}} --- {{ count }}</p>
+            <button @click="send">点击我就发送给父亲</button>
+        </div>
+    </template>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script>
+        window.onload = () => {
+            Vue.component('myParent',{
+                template: '#p',
+                data() {
+                    return {
+                        count: 100,
+                        msg: 'a'
+                    }
+                },
+                methods: {
+                    sendMessage() {
+                        this.count -= 10;
+                        this.msg = '这是触发了父亲方法';
+                    }
+                },
+            })
+            Vue.component('myChild',{
+                template: '#c',
+                props: ['msg'],
+                data() {
+                    return {
+                        count: 0
+                    }
+                },
+                methods: {
+                    send() {
+                        this.$emit('send-mes')
+                        this.count+=10;
+                    }
+                },
+            })
+
+            new Vue({
+                el:'#app'
+            })
+        }
+    </script>
+</body>
+
+</html>
